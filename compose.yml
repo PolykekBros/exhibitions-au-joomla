@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=joomla_user
+      - POSTGRES_PASSWORD=joomla_password
+      - POSTGRES_DB=joomla
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  joomla:
+    image: joomla:5.4.7-php8.2-fpm-alpine
+    environment:
+      - JOOMLA_DB_HOST=postgres
+      - JOOMLA_DB_USER=joomla_user
+      - JOOMLA_DB_PASSWORD=joomla_password
+      - JOOMLA_DB_NAME=joomla
+      - JOOMLA_DB_TYPE=pgsql
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - postgres
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - joomla
+
+volumes:
+  pg_data:
