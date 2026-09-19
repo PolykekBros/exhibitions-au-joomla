@@ -41,9 +41,9 @@
 }
 
 /* ========================================================= */
-/* --- МОБИЛЬНАЯ ВЕРСИЯ (до 1020px) --- */
+/* --- МОБИЛЬНАЯ ВЕРСИЯ (до 1150px) --- */
 /* ========================================================= */
-@media (max-width: 1020px) {
+@media (max-width: 1150px) {
     /* 1. Прячем графику */
     .container-header .search,
     .container-header .container-search,
@@ -52,14 +52,13 @@
         display: none !important;
     }
 
-    /* 2. Шапка - гибкая строка (Лого и Гамбургер наверху!) */
+    /* 2. Шапка - гибкая строка */
     .container-header {
         display: flex !important;
         flex-direction: row !important;
         flex-wrap: wrap !important; 
         justify-content: space-between !important;
         
-        /* ИСПРАВЛЕНИЕ: Прижимаем элементы к верхнему краю, а не по центру */
         align-items: flex-start !important; 
         
         padding: 10px 20px !important;
@@ -71,7 +70,17 @@
         flex: 0 0 auto !important;
         width: auto !important;
         max-width: 70% !important; 
-        margin-top: 5px !important; /* Небольшая корректировка для красоты */
+        margin-top: 0 !important; 
+    }
+
+  /* Жестко фиксируем размер герба на мобилках и запрещаем его сжимать */
+    .container-header .navbar-brand img,
+    .container-header > div:first-child img {
+        width: 90px !important; /* Меняйте цифру, чтобы сделать идеальный размер для телефона */
+        min-width: 90px !important; /* Запрещаем сплющиваться */
+        height: auto !important;
+        max-height: none !important;
+        flex-shrink: 0 !important;
     }
 
     /* Блок с меню */
@@ -88,7 +97,7 @@
     .container-header .navbar {
         display: flex !important;
         flex-wrap: wrap !important;
-        justify-content: flex-end !important;
+        justify-content: center !important;
         width: 100% !important;
     }
 
@@ -97,7 +106,8 @@
         background-color: rgba(255, 255, 255, 0.1) !important;
         border-color: rgba(255, 255, 255, 0.5) !important;
         margin-left: auto !important;
-        margin-top: 5px !important;
+        margin-top: 25px !important;
+        margin-bottom: 0 !important;
         display: inline-flex !important; 
     }
     
@@ -110,6 +120,15 @@
         width: 100% !important;
         flex-basis: 100% !important;
         margin-top: 20px !important; /* Отступ от логотипа и кнопки вниз */
+    }
+
+    /* ЖЕСТКО ГАСИМ ДЕСКТОПНЫЙ РЕЖИМ BOOTSTRAP В ПРОМЕЖУТКЕ 992-1150px */
+    .container-header .navbar-collapse:not(.show) {
+        display: none !important; /* Меню скрыто, пока нет системного класса .show */
+    }
+
+    .container-header .navbar-collapse.show {
+        display: block !important; /* Показываем только по клику на гамбургер */
     }
 
     .container-header .mod-menu {
@@ -142,22 +161,25 @@
 }
 
 /* ========================================================= */
-/* --- ДЕСКТОПНАЯ ВЕРСИЯ (от 1021px) --- */
+/* --- ДЕСКТОПНАЯ ВЕРСИЯ (от 1151px) --- */
 /* ========================================================= */
-@media (min-width: 1021px) {
-    /* Наш жесткий красивый грид */
+@media (min-width: 1151px) {
+    /* Главная сетка: ровно 2 колонки (Логотип и Контейнер с навигацией) */
     .container-header {
         display: grid !important;
-        grid-template-columns: auto 1fr auto !important;
+        grid-template-columns: max-content 1fr !important; 
         align-items: center !important;
-        gap: 30px !important;
+        gap: 5px !important;
         padding: 10px 20px !important;
         width: 100% !important;
     }
 
+    /* Вторая колонка (внутри неё и меню, и портрет) */
     .container-header .container-nav {
         display: flex !important;
-        justify-content: flex-start !important; 
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-start !important; /* Меню прижимается влево, к логотипу */
         width: 100% !important;
     }
 
@@ -165,7 +187,6 @@
     .container-header .navbar-nav {
         display: flex !important;
         flex-direction: row !important;
-        justify-content: flex-start !important;
         align-items: center !important;
         margin: 0 !important;
         padding: 0 !important;
@@ -189,7 +210,7 @@
         display: inline-block !important;
     }
 
-    /* Возвращаем разделители | только на ПК */
+    /* Разделители | */
     .container-header .mod-menu > li + li::before,
     .container-header .nav-item + .nav-item::before {
         content: "|" !important;
@@ -199,29 +220,50 @@
         margin: 0 15px !important;
         position: static !important;
     }
-}
 
-/* Если модуль находится в отдельной 3-й колонке грида */
-.container-header > .mod-custom,
-.container-header > div:nth-child(3),
-.container-header > div:last-child {
-    justify-self: end !important;
-    text-align: right !important;
-}
-
-/* Если модуль вложен внутрь контейнера навигации (флексбокс) */
-.container-header .container-nav .mod-custom,
-.container-header .container-nav > div:not(.navbar) {
-    margin-left: auto !important; 
+    /* ВОТ ОНО: Толкаем графику Алферова вправо ВНУТРИ контейнера навигации */
+    .container-header .container-nav .mod-custom,
+    .container-header .container-nav > div:not(.navbar) {
+        margin-left: auto !important; /* Эта пружина выдавит портрет в край экрана */
+        display: flex !important;
+        align-items: center !important;
+    }
 }
 
 /* ========================================================= */
 /* --- ВНЕШНИЙ ВИД КАРТОЧЕК (БЛОГ КАТЕГОРИИ ВЫСТАВОК) --- */
 /* ========================================================= */
 
-/* Расстояние между карточками */
-.blog-items {
-    gap: 25px;
+/* ========================================================= */
+/* --- УМНАЯ 3-КОЛОНОЧНАЯ СЕТКА ЖУРНАЛЬНОГО ТИПА --- */
+/* ========================================================= */
+@media (min-width: 992px) {
+    .blog-items {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 25px !important;
+        align-items: start !important;
+    }
+
+    /* Первая карточка (САМАЯ БОЛЬШАЯ) */
+    .blog-items > .blog-item:nth-child(1) {
+        grid-column: span 2 !important;
+        grid-row: span 2 !important;
+    }
+
+    /* Увеличиваем заголовок только у первой карточки */
+    .blog-items > .blog-item:nth-child(1) .page-header h2 a {
+        font-size: 1.8rem !important;
+    }
+}
+
+/* Мобильная версия: всё в один столбик */
+@media (max-width: 991px) {
+    .blog-items {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 25px !important;
+    }
 }
 
 /* 1. Настройка фотографий (Квадрат и скругления) */
@@ -231,11 +273,11 @@
 
 .blog-item .item-image img {
     width: 100% !important;
-    aspect-ratio: 1 / 1 !important; /* Делает картинку идеально квадратной */
-    object-fit: cover !important;  /* Обрезает края, сохраняя пропорции, чтобы фото не сплющилось */
-    border-radius: 15px !important; /* Сильное скругление углов */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* Легкая современная тень */
-    transition: transform 0.3s ease; /* Плавность для анимации */
+    height: auto !important; /* Позволяет картинке принять свой настоящий размер */
+    object-fit: cover !important;
+    border-radius: 15px !important; /* Оставляем ваше красивое скругление */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* Оставляем вашу тень */
+    transition: transform 0.3s ease;
 }
 
 /* Картинка приподнимается при наведении на ЛЮБУЮ часть карточки */
@@ -386,4 +428,59 @@
     bottom: 0;
     left: 0;
     z-index: 10;
+}
+
+/* ========================================================= */
+/* --- КЛИКАБЕЛЬНЫЙ ГЛАВНЫЙ ЗАГОЛОВОК --- */
+/* ========================================================= */
+
+/* Убираем синий цвет и подчеркивание у ссылки */
+.page-header h1 a,
+.category-name a,
+h1.page-title a,
+h1[itemprop="name"] a {
+    color: #5b3679 !important; /* Наш фирменный фиолетовый цвет */
+    font-family: 'Comfortaa', sans-serif !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    transition: opacity 0.2s ease !important; /* Плавная анимация */
+}
+
+/* Добавляем легкое потускнение при наведении, чтобы человек понял, что это кнопка */
+.page-header h1 a:hover,
+.category-name a:hover,
+h1.page-title a:hover,
+h1[itemprop="name"] a:hover {
+    opacity: 0.7 !important;
+    text-decoration: none !important;
+}
+
+/* ========================================================= */
+/* --- НАСТРОЙКА РАЗМЕРА И ПОЗИЦИИ ГЕРБА (ДЛЯ ПК) --- */
+/* ========================================================= */
+
+/* 1. Делаем герб больше (снимаем лимиты шаблона Cassiopeia) */
+.container-header .navbar-brand img,
+.container-header > div:first-child img {
+    width: 100px !important; 
+    height: auto !important;
+    max-height: none !important; 
+}
+
+/* 2. Возвращаем элементы к краям экрана */
+@media (min-width: 1021px) {
+    /* Обнуляем огромный левый отступ, возвращая герб на базу */
+    .container-header > div:first-child,
+    .container-header .navbar-brand {
+        margin-left: 0 !important; 
+    }
+
+    /* Возвращаем Алферова к правому краю */
+    .container-header > .mod-custom,
+    .container-header > div:nth-child(3),
+    .container-header > div:last-child {
+        margin-right: 0 !important; 
+    }
 }
